@@ -97,7 +97,7 @@ const songs = rawVideos
   <Headline title="IZDANJA" class="pt-xxl pb-xl border-b border-surface-variant bg-surface-container-low" />
   <div class="container mx-auto px-4 md:px-grid-margin pt-16">
     <div class="relative px-14">
-      <div id="izdanja-viewport" class="overflow-y-hidden overflow-x-scroll md:overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div id="izdanja-viewport" class="overflow-y-hidden overflow-x-scroll md:overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
         <div id="izdanja-track" class="flex gap-8">
           {songs.map((song: any, i: number) => (
             <div class="izdanja-card shrink-0 w-[80%] md:w-[calc((100%-4rem)/3)] snap-start relative aspect-3/4 overflow-hidden group">
@@ -110,7 +110,7 @@ const songs = rawVideos
               <div class="izdanja-card-grain absolute inset-0 z-20 pointer-events-none" style="opacity: 0.04; background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E&quot;);"></div>
 
               <button class="izdanja-card-play absolute inset-0 flex items-center justify-center z-25 cursor-pointer bg-transparent border-0 group/play">
-                <span class="material-symbols-outlined !text-[3rem] text-white/60 group-hover/play:text-accent-neon group-hover/play:scale-110 transition-all duration-300 drop-shadow-lg">play_circle</span>
+                <span class="material-symbols-outlined text-[3rem]! text-white/60 group-hover/play:text-accent-neon group-hover/play:scale-110 transition-all duration-300 drop-shadow-lg">play_circle</span>
               </button>
 
               <div class="izdanja-card-credits absolute bottom-2 right-2 bg-surface-container p-4 z-30 min-w-[75%] max-w-[calc(100%-1rem)]">
