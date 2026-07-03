@@ -1,0 +1,17 @@
+---
+const { items = ['Trap', 'Drill', 'Afrobeat', 'Alt R&B', 'Rap'] } = Astro.props;
+const COPIES = 6;
+---
+
+<section class="bg-accent-neon py-6 overflow-hidden border-y-2 border-black">
+  <div class="flex whitespace-nowrap items-center gap-12 animate-marquee" style={`--marquee-copies: ${COPIES}`}>
+    {Array.from({ length: COPIES }, () => (
+      items.map((item) => (
+        <>
+          <span class="font-headline font-black italic text-4xl text-white uppercase tracking-tighter">{item}</span>
+          <span class="w-8 h-8 bg-white rotate-45 shrink-0"></span>
+        </>
+      ))
+    ))}
+  </div>
+</section>

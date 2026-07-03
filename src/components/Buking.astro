@@ -1,0 +1,80 @@
+---
+import TexturedBackground from './TexturedBackground.astro';
+import Headline from './Headline.astro';
+import Button from './Button.astro';
+---
+
+<section class="relative py-24 bg-background overflow-hidden" id="buking">
+  <TexturedBackground />
+  <Headline title="BUKING I PR" class="pb-xxl relative z-10" />
+  <div class="px-4 md:px-grid-margin grid grid-cols-1 md:grid-cols-2 gap-xxl items-start relative z-10">
+    <div class="flex flex-col gap-xl">
+      <div class="space-y-6">
+        <h3 class="font-headline text-2xl font-bold uppercase text-primary">Postani deo priče</h3>
+        <p class="font-body text-on-surface-variant leading-relaxed">Za sve upite oko nastupa, intervjua, saradnji ili PR materijala, popuni formu ili nas kontaktiraj direktno putem mejla.</p>
+      </div>
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-4 text-on-surface">
+          <span class="material-symbols-outlined text-accent-neon">mail</span>
+          <a href="mailto:miljanamilekic@gmail.com" class="font-label hover:text-accent-neon transition-colors">miljanamilekic@gmail.com</a>
+        </div>
+        <div class="flex items-center gap-4 text-on-surface">
+          <span class="material-symbols-outlined text-accent-neon">call</span>
+          <a href="tel:+381658802008" class="font-label hover:text-accent-neon transition-colors">+381 65 8802008</a>
+        </div>
+      </div>
+    </div>
+
+    <form class="flex flex-col gap-6 bg-surface-container p-8 md:p-12 border border-surface-variant" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="3210c322-3c3f-45a0-adcb-8a62dd9e4fbd" />
+      <div class="flex flex-col gap-2">
+        <label class="font-label uppercase text-sm font-bold text-on-surface-variant" for="ime">Ime / Organizacija</label>
+        <input class="bg-background border border-surface-variant text-white px-4 py-3 focus:outline-none focus:border-accent-neon digital-asphalt-input transition-colors w-full" id="ime" name="name" type="text" required />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="font-label uppercase text-sm font-bold text-on-surface-variant" for="email">Email adresa</label>
+        <input class="bg-background border border-surface-variant text-white px-4 py-3 focus:outline-none focus:border-accent-neon digital-asphalt-input transition-colors w-full" id="email" name="email" type="email" required />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="font-label uppercase text-sm font-bold text-on-surface-variant" for="poruka">Poruka</label>
+        <textarea class="bg-background border border-surface-variant text-white px-4 py-3 focus:outline-none focus:border-accent-neon digital-asphalt-input transition-colors w-full h-32 resize-none" id="poruka" name="message" required></textarea>
+      </div>
+      <Button variant="accent" label="POŠALJI UPIT" type="submit" class="font-headline font-black uppercase tracking-widest py-4 mt-4 w-full" />
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('contact-form');
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const originalText = submitBtn.textContent;
+
+    submitBtn.textContent = 'Slanje...';
+    submitBtn.disabled = true;
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Uspešno! Poruka je poslata.');
+        form.reset();
+      } else {
+        alert('Greška: ' + data.message);
+      }
+    } catch {
+      alert('Nešto je pošlo po zlu. Pokušajte ponovo.');
+    } finally {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    }
+  });
+</script>

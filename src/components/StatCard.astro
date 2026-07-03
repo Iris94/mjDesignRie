@@ -1,0 +1,15 @@
+---
+interface Props {
+  number: string;
+  title: string;
+  description: string;
+}
+
+const { number, title, description } = Astro.props;
+---
+
+<div class="bg-surface-container p-xl border border-surface-variant flex flex-col gap-sm hover:border-accent-neon transition-colors">
+  <span class="text-accent-neon font-display text-7xl font-black leading-none">{number}</span>
+  <span class="font-headline text-xl font-bold uppercase">{title}</span>
+  <p class="font-body text-sm text-on-surface-variant">{description}</p>
+</div>

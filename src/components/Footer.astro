@@ -1,0 +1,31 @@
+---
+import Icon from './Icon.astro';
+import { LINKS } from '../constants/links';
+import { ICON_COLORS } from '../constants/icons';
+
+const socials = ['instagram', 'tiktok', 'spotify', 'youtube', 'appleMusic'] as const;
+---
+
+<footer class="bg-surface border-t border-surface-variant py-8 relative z-10">
+  <div class="px-4 md:px-grid-margin flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="flex items-center gap-6">
+      <div class="text-2xl font-headline font-black italic text-surface-variant">RIE</div>
+
+      <div class="flex items-center gap-4">
+        {socials.map(name => (
+          <a href={LINKS[name]} target="_blank" rel="noopener noreferrer"
+             class="flex items-center justify-center w-10 h-10 border border-current rounded-full
+                    text-on-surface-variant hover:text-[var(--ho)] hover:border-[var(--ho)]
+                    transition-all duration-300"
+             style={`--ho: ${ICON_COLORS[name]}`}>
+            <Icon name={name} class="w-5 h-5" />
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <p class="font-body text-sm text-on-surface-variant uppercase tracking-widest">
+      &copy; 2026 RIE Music. Sva prava zadr&#x17E;ana.
+    </p>
+  </div>
+</footer>

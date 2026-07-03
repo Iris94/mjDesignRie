@@ -1,0 +1,238 @@
+---
+import Headline from './Headline.astro';
+import TexturedBackground from './TexturedBackground.astro';
+
+interface YouTubePlaylistItem {
+  snippet: {
+    title: string;
+    description: string;
+    thumbnails: {
+      high?: { url: string };
+      maxres?: { url: string };
+      standard?: { url: string };
+      default?: { url: string };
+    };
+    resourceId: {
+      videoId: string;
+    };
+  };
+}
+
+async function getLatestYouTubeVideos(channelId: string, apiKey: string) {
+  const uploadsPlaylistId = channelId.replace(/^UC/, 'UU');
+  const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${uploadsPlaylistId}&key=${apiKey}`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`YouTube API error: HTTP ${res.status}`);
+    const data = await res.json();
+
+    return data.items.map((item: YouTubePlaylistItem) => {
+      const s = item.snippet;
+      return {
+        naslov: s.title,
+        videoId: s.resourceId.videoId,
+        link: `https://www.youtube.com/watch?v=${s.resourceId.videoId}`,
+        slika: s.thumbnails.maxres?.url || s.thumbnails.standard?.url || s.thumbnails.high?.url || s.thumbnails.default?.url || '',
+        opis: s.description,
+      };
+    });
+  } catch (e) {
+    console.error('YouTube API greška:', e);
+    return [];
+  }
+}
+
+function parseLine(text: string, key: string): string | null {
+  const regex = new RegExp(`^${key}:\\s*(.+)$`, 'm');
+  const match = text.match(regex);
+  return match?.[1]?.trim() || null;
+}
+
+const videos = await getLatestYouTubeVideos(
+  'UCvNyu7GW5fAlQRhO4mDKcig',
+  import.meta.env.YOUTUBE_API_KEY
+);
+const rawVideos = videos || [];
+
+const ids = rawVideos.map((v:any) => v.videoId).join(',');
+const durRes = await fetch(
+  `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${import.meta.env.YOUTUBE_API_KEY}`
+);
+const durData = await durRes.json();
+const durationMap = new Map<string, number>();
+durData.items?.forEach((item: any) => {
+  const m = item.contentDetails.duration.match(/PT(?:(\d+)M)?(?:(\d+)S)?/);
+  const mins = parseInt(m?.[1] || '0');
+  const secs = parseInt(m?.[2] || '0');
+  durationMap.set(item.id, mins * 60 + secs);
+});
+
+const songs = rawVideos
+  .filter((v:any) => v.naslov.length > 3 && (durationMap.get(v.videoId) || 0) >= 90)
+  .slice(0, 18)
+  .map((v:any) => {
+    const desc = v.opis || '';
+    const m = v.naslov.match(/^(.+?)\s*-\s*(.+?)(?:\s*\([^)]*\))?\s*$/);
+    return {
+      naslov: v.naslov,
+      trackName: m?.[2]?.trim() || v.naslov || '',
+      artistName: m?.[1]?.trim() || '',
+      videoId: v.videoId,
+      link: v.link,
+      slika: v.slika,
+      muzika: parseLine(desc, 'Muzika'),
+      aranzman: parseLine(desc, 'Aranžman'),
+      tekst: parseLine(desc, 'Tekst'),
+      mixMaster: parseLine(desc, 'Mix & Master'),
+      kamera: parseLine(desc, 'Camera') || parseLine(desc, 'Kamera'),
+      edit: parseLine(desc, 'Edit'),
+      artwork: parseLine(desc, 'Artwork'),
+    };
+  });
+---
+
+<section class="relative py-24 bg-surface-container-low border-b border-surface-variant" id="izdanja">
+  <TexturedBackground />
+  <Headline title="IZDANJA" class="pt-xxl pb-xl border-b border-surface-variant bg-surface-container-low" />
+  <div class="container mx-auto px-4 md:px-grid-margin pt-16">
+    <div class="relative px-14">
+      <div id="izdanja-viewport" class="overflow-y-hidden overflow-x-scroll md:overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div id="izdanja-track" class="flex gap-8">
+          {songs.map((song: any, i: number) => (
+            <div class="izdanja-card shrink-0 w-[80%] md:w-[calc((100%-4rem)/3)] snap-start relative aspect-3/4 overflow-hidden group">
+              <img src={song.slika} alt={song.trackName} class="izdanja-card-thumb absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              {i === 0 && (
+                <span class="absolute top-2 left-2 z-30 bg-accent-neon text-white text-[10px] font-headline font-bold px-2 py-0.5 uppercase tracking-wider">Najnovije</span>
+              )}
+
+              <div class="izdanja-card-dark absolute inset-0 bg-black/40 z-10 pointer-events-none"></div>
+              <div class="izdanja-card-grain absolute inset-0 z-20 pointer-events-none" style="opacity: 0.04; background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E&quot;);"></div>
+
+              <button class="izdanja-card-play absolute inset-0 flex items-center justify-center z-25 cursor-pointer bg-transparent border-0 group/play">
+                <span class="material-symbols-outlined !text-[3rem] text-white/60 group-hover/play:text-accent-neon group-hover/play:scale-110 transition-all duration-300 drop-shadow-lg">play_circle</span>
+              </button>
+
+              <div class="izdanja-card-credits absolute bottom-2 right-2 bg-surface-container p-4 z-30 min-w-[75%] max-w-[calc(100%-1rem)]">
+                <h4 class="font-headline font-bold text-base uppercase text-white mb-2 leading-tight">{song.trackName}</h4>
+                <div class="text-xs text-on-surface-variant space-y-0.5 mb-2">
+                  {song.muzika && <div><span class="font-bold">Muzika:</span> {song.muzika}</div>}
+                  {song.aranzman && <div><span class="font-bold">Aranžman:</span> {song.aranzman}</div>}
+                  {song.tekst && <div><span class="font-bold">Tekst:</span> {song.tekst}</div>}
+                  {song.mixMaster && <div><span class="font-bold">Mix &amp; Master:</span> {song.mixMaster}</div>}
+                </div>
+                <a href={song.link} target="_blank" rel="noopener noreferrer" class="bg-accent-neon text-white text-xs font-label uppercase font-bold tracking-wider px-2.5 py-1.5 flex items-center gap-1.5 hover:opacity-80 transition-opacity w-fit">
+                  <span class="material-symbols-outlined text-base">smart_display</span>
+                  <span>YouTube</span>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button id="izdanja-prev" class="absolute left-0 top-1/2 -translate-y-1/2 z-40 hidden md:flex bg-black/40 border-2 border-white/20 text-white p-2.5 hover:bg-accent-neon hover:border-accent-neon transition-colors items-center justify-center cursor-pointer group/arrow">
+        <span class="material-symbols-outlined group-hover/arrow:text-white transition-colors">chevron_left</span>
+      </button>
+
+      <button id="izdanja-next" class="absolute right-0 top-1/2 -translate-y-1/2 z-40 hidden md:flex bg-black/40 border-2 border-white/20 text-white p-2.5 hover:bg-accent-neon hover:border-accent-neon transition-colors items-center justify-center cursor-pointer group/arrow">
+        <span class="material-symbols-outlined group-hover/arrow:text-white transition-colors">chevron_right</span>
+      </button>
+    </div>
+
+    <div class="mt-8 w-full h-3 bg-surface-container rounded-full relative">
+      <div id="izdanja-slider" class="absolute left-0 top-0 h-full bg-accent-neon rounded-full transition-all duration-300" style="width: 33.333%; left: 0%;"></div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ songs }}>
+  const VISIBLE_DESKTOP = 3;
+  const VIEW_MD_BP = 768;
+
+  const viewport = document.getElementById('izdanja-viewport');
+  const slider = document.getElementById('izdanja-slider');
+  const cards = viewport.querySelectorAll('.izdanja-card');
+
+  function getVisibleCount() {
+    return window.innerWidth >= VIEW_MD_BP ? VISIBLE_DESKTOP : 1;
+  }
+  function updateSliderWidth() {
+    const count = getVisibleCount();
+    slider.style.width = `${100 / count}%`;
+  }
+  function getMaxIndex() {
+    return Math.max(0, songs.length - getVisibleCount());
+  }
+  updateSliderWidth();
+
+  function updateSliderFromScroll() {
+    const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+    if (maxScroll <= 0) {
+      slider.style.left = '0%';
+      return;
+    }
+    const count = getVisibleCount();
+    const sliderW = 100 / count;
+    const progress = viewport.scrollLeft / maxScroll;
+    slider.style.left = `${progress * (100 - sliderW)}%`;
+  }
+
+  viewport.addEventListener('scroll', updateSliderFromScroll, { passive: true });
+
+  function goTo(idx) {
+    const maxIdx = getMaxIndex();
+    const clamped = Math.max(0, Math.min(idx, maxIdx));
+    cards[clamped]?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  }
+
+  function getCurrentIndex() {
+    let best = 0;
+    let bestDist = Infinity;
+    cards.forEach((card, i) => {
+      const dist = Math.abs(card.getBoundingClientRect().left - viewport.getBoundingClientRect().left);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+    return best;
+  }
+
+  document.getElementById('izdanja-prev').addEventListener('click', () => goTo(getCurrentIndex() - 1));
+  document.getElementById('izdanja-next').addEventListener('click', () => goTo(getCurrentIndex() + 1));
+
+  window.addEventListener('resize', () => {
+    updateSliderWidth();
+    updateSliderFromScroll();
+  });
+
+  function playVideo(card, videoId) {
+    const thumb = card.querySelector('.izdanja-card-thumb');
+    const playBtn = card.querySelector('.izdanja-card-play');
+    const dark = card.querySelector('.izdanja-card-dark');
+    const grain = card.querySelector('.izdanja-card-grain');
+    const credits = card.querySelector('.izdanja-card-credits');
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.className = 'absolute inset-0 w-full h-full object-cover border-0 z-5';
+    iframe.title = 'YouTube video player';
+    iframe.style.aspectRatio = '3/4';
+
+    thumb?.replaceWith(iframe);
+    playBtn?.remove();
+    dark?.remove();
+    grain?.remove();
+    if (credits) credits.style.display = 'none';
+  }
+
+  document.querySelectorAll('.izdanja-card-play').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.izdanja-card');
+      if (card) playVideo(card, songs[i].videoId);
+    });
+  });
+</script>

@@ -1,0 +1,15 @@
+---
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label, class: className = '' } = Astro.props;
+---
+
+<div class="bg-surface-container border border-surface-variant flex items-center justify-center {className}">
+  {label && (
+    <span class="font-headline text-surface-variant text-xl uppercase tracking-widest">{label}</span>
+  )}
+  <slot />
+</div>

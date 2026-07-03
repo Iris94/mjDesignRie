@@ -1,0 +1,49 @@
+---
+import Button from './Button.astro';
+---
+
+<nav class="fixed top-0 w-full z-50 bg-surface border-b-2 border-primary h-20 hidden md:flex justify-between items-center px-4 md:px-grid-margin transition-all duration-300" id="main-nav">
+  <div class="text-4xl font-headline font-black italic tracking-tighter text-white">RIE</div>
+  <div class="flex gap-8 items-center">
+    <a class="nav-link font-label uppercase tracking-tighter text-on-surface-variant border-b-2 border-transparent pb-1 hover:opacity-80 transition-all duration-200" href="#hero">NASLOVNA</a>
+    <a class="nav-link font-label uppercase tracking-tighter text-on-surface-variant border-b-2 border-transparent pb-1 hover:opacity-80 transition-all duration-200" href="#biografija">BIOGRAFIJA</a>
+    <a class="nav-link font-label uppercase tracking-tighter text-on-surface-variant border-b-2 border-transparent pb-1 hover:opacity-80 transition-all duration-200" href="#izdanja">IZDANJA</a>
+    <a class="nav-link font-label uppercase tracking-tighter text-on-surface-variant border-b-2 border-transparent pb-1 hover:opacity-80 transition-all duration-200" href="#galerija">GALERIJA</a>
+    <a class="nav-link font-label uppercase tracking-tighter text-on-surface-variant border-b-2 border-transparent pb-1 hover:opacity-80 transition-all duration-200" href="#merch">MERCH</a>
+    <a class="nav-link font-label uppercase tracking-tighter text-on-surface-variant border-b-2 border-transparent pb-1 hover:opacity-80 transition-all duration-200" href="#buking">BUKING I PR</a>
+    <Button variant="accent" label="KONTAKT" href="#buking" class="px-6 py-2 font-label font-black tracking-tighter active:scale-95 transition-transform duration-150" />
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const links = document.querySelectorAll('.nav-link');
+    const sections = [...links]
+      .map(l => document.querySelector(l.getAttribute('href')))
+      .filter(Boolean);
+
+    const offset = 100;
+
+    function updateActive() {
+      const scrollY = window.scrollY;
+      let current = sections[0]?.id || 'hero';
+
+      sections.forEach(section => {
+        if (scrollY + offset >= section.offsetTop) {
+          current = section.id;
+        }
+      });
+
+      links.forEach(link => {
+        const active = link.getAttribute('href') === `#${current}`;
+        link.classList.toggle('text-accent-neon', active);
+        link.classList.toggle('border-accent-neon', active);
+        link.classList.toggle('text-on-surface-variant', !active);
+        link.classList.toggle('border-transparent', !active);
+      });
+    }
+
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+  });
+</script>

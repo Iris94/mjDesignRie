@@ -1,0 +1,30 @@
+---
+interface Props {
+  variant: 'spotify' | 'youtube' | 'accent';
+  label: string;
+  icon?: string;
+  href?: string;
+  class?: string;
+  type?: 'button' | 'submit';
+}
+
+const { variant, label, icon, href, class: className = '', type = 'button' } = Astro.props;
+
+const variantClasses: Record<string, string> = {
+  spotify: 'bg-[#1DB954] text-black',
+  youtube: 'bg-[#FF0000] text-white',
+  accent: 'bg-accent-neon text-white',
+};
+---
+
+{href ? (
+  <a href={href} class={`${variantClasses[variant]} hover:opacity-80 transition-all ${className}`}>
+    {icon && <span class="material-symbols-outlined">{icon}</span>}
+    <span>{label}</span>
+  </a>
+) : (
+  <button type={type} class={`${variantClasses[variant]} hover:opacity-80 transition-all ${className}`}>
+    {icon && <span class="material-symbols-outlined">{icon}</span>}
+    <span>{label}</span>
+  </button>
+)}

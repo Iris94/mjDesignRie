@@ -1,0 +1,15 @@
+---
+import { ICONS } from '../constants/icons';
+
+interface Props {
+  name: keyof typeof ICONS;
+  class?: string;
+}
+
+const { name, class: className = '' } = Astro.props;
+const pathData = ICONS[name];
+---
+
+<svg class={`${className} fill-current`} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <Fragment set:html={pathData} />
+</svg>
