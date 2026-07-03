@@ -96,11 +96,11 @@ const songs = rawVideos
   <TexturedBackground />
   <Headline title="IZDANJA" class="pt-xxl pb-xl border-b border-surface-variant bg-surface-container-low" />
   <div class="container mx-auto px-4 md:px-grid-margin pt-16">
-    <div class="relative px-14">
+    <div class="relative">
       <div id="izdanja-viewport" class="overflow-y-hidden overflow-x-scroll md:overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
-        <div id="izdanja-track" class="flex gap-8">
+        <div id="izdanja-track" class="flex gap-4 md:gap-6">
           {songs.map((song: any, i: number) => (
-            <div class="izdanja-card shrink-0 w-[80%] md:w-[calc((100%-4rem)/3)] snap-start relative aspect-3/4 overflow-hidden group">
+            <div class="izdanja-card shrink-0 w-[88%] md:w-[calc((100%-3rem)/3)] snap-start relative aspect-[2/3] md:aspect-3/4 overflow-hidden group">
               <img src={song.slika} alt={song.trackName} class="izdanja-card-thumb absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
               {i === 0 && (
                 <span class="absolute top-2 left-2 z-30 bg-accent-neon text-white text-[10px] font-headline font-bold px-2 py-0.5 uppercase tracking-wider">Najnovije</span>
@@ -131,11 +131,11 @@ const songs = rawVideos
         </div>
       </div>
 
-      <button id="izdanja-prev" class="absolute left-0 top-1/2 -translate-y-1/2 z-40 hidden md:flex bg-black/40 border-2 border-white/20 text-white p-2.5 hover:bg-accent-neon hover:border-accent-neon transition-colors items-center justify-center cursor-pointer group/arrow">
+      <button id="izdanja-prev" class="absolute -left-5 top-1/2 -translate-y-1/2 z-40 hidden md:flex bg-black/40 border-2 border-white/20 text-white p-2.5 hover:bg-accent-neon hover:border-accent-neon transition-colors items-center justify-center cursor-pointer group/arrow">
         <span class="material-symbols-outlined group-hover/arrow:text-white transition-colors">chevron_left</span>
       </button>
 
-      <button id="izdanja-next" class="absolute right-0 top-1/2 -translate-y-1/2 z-40 hidden md:flex bg-black/40 border-2 border-white/20 text-white p-2.5 hover:bg-accent-neon hover:border-accent-neon transition-colors items-center justify-center cursor-pointer group/arrow">
+      <button id="izdanja-next" class="absolute -right-5 top-1/2 -translate-y-1/2 z-40 hidden md:flex bg-black/40 border-2 border-white/20 text-white p-2.5 hover:bg-accent-neon hover:border-accent-neon transition-colors items-center justify-center cursor-pointer group/arrow">
         <span class="material-symbols-outlined group-hover/arrow:text-white transition-colors">chevron_right</span>
       </button>
     </div>
@@ -158,8 +158,7 @@ const songs = rawVideos
     return window.innerWidth >= VIEW_MD_BP ? VISIBLE_DESKTOP : 1;
   }
   function updateSliderWidth() {
-    const count = getVisibleCount();
-    slider.style.width = `${100 / count}%`;
+    slider.style.width = `${100 / songs.length}%`;
   }
   function getMaxIndex() {
     return Math.max(0, songs.length - getVisibleCount());
@@ -172,8 +171,7 @@ const songs = rawVideos
       slider.style.left = '0%';
       return;
     }
-    const count = getVisibleCount();
-    const sliderW = 100 / count;
+    const sliderW = 100 / songs.length;
     const progress = viewport.scrollLeft / maxScroll;
     slider.style.left = `${progress * (100 - sliderW)}%`;
   }

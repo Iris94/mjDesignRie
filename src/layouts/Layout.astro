@@ -21,6 +21,20 @@ import '../styles/global.css';
   </head>
   <body class="font-body selection:bg-accent-neon selection:text-white relative">
     <div class="grain-overlay"></div>
+    <div id="splash" class="fixed inset-0 z-[9999] bg-background flex items-center justify-center transition-opacity duration-500">
+      <h2 class="font-headline font-black italic text-5xl md:text-8xl text-on-surface-variant uppercase tracking-tighter opacity-0"
+          style="animation: splashIn 0.8s ease-out 0.3s forwards;">ŠOUŠOUŠOU</h2>
+    </div>
     <slot />
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const splash = document.getElementById('splash');
+        if (!splash) return;
+        setTimeout(() => {
+          splash.style.opacity = '0';
+          setTimeout(() => splash.remove(), 600);
+        }, 2500);
+      });
+    </script>
   </body>
 </html>

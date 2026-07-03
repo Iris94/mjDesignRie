@@ -9,7 +9,7 @@ import Button from './Button.astro';
   <Headline title="BUKING I PR" class="pb-xxl relative z-10" />
   <div class="px-4 md:px-grid-margin grid grid-cols-1 md:grid-cols-2 gap-xxl items-start relative z-10">
     <div class="flex flex-col gap-xl">
-      <div class="space-y-6">
+      <div class="space-y-6 mt-6">
         <h3 class="font-headline text-2xl font-bold uppercase text-primary">Postani deo priče</h3>
         <p class="font-body text-on-surface-variant leading-relaxed">Za sve upite oko nastupa, intervjua, saradnji ili PR materijala, popuni formu ili nas kontaktiraj direktno putem mejla.</p>
       </div>
@@ -45,8 +45,10 @@ import Button from './Button.astro';
 </section>
 
 <script>
-  const form = document.getElementById('contact-form');
-  const submitBtn = form.querySelector('button[type="submit"]');
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  if (!form) throw new Error('Form not found');
+  const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+  if (!submitBtn) throw new Error('Submit button not found');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
