@@ -100,7 +100,7 @@ const songs = rawVideos
       <div id="izdanja-viewport" class="overflow-y-hidden overflow-x-scroll md:overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
         <div id="izdanja-track" class="flex gap-4 md:gap-6">
           {songs.map((song: any, i: number) => (
-            <div class="izdanja-card shrink-0 w-[88%] md:w-[calc((100%-3rem)/3)] snap-start relative aspect-[2/3] md:aspect-3/4 overflow-hidden group">
+            <div class="izdanja-card shrink-0 w-[88%] md:w-[calc((100%-3rem)/3)] snap-start relative aspect-2/3 md:aspect-3/4 overflow-hidden group">
               <img src={song.slika} alt={song.trackName} class="izdanja-card-thumb absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
               {i === 0 && (
                 <span class="absolute top-2 left-2 z-30 bg-accent-neon text-white text-[10px] font-headline font-bold px-2 py-0.5 uppercase tracking-wider">Najnovije</span>
