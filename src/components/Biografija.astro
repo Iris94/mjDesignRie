@@ -8,7 +8,7 @@ import { LINKS } from '../constants/links';
 <section class="relative border-b border-surface-variant overflow-hidden py-24" id="biografija">
   <Headline title="BIOGRAFIJA" as="h1" class="pt-xxl pb-xl border-b border-surface-variant bg-background" />
 
-  <div class="px-4 md:px-grid-margin py-xxl bg-background">
+  <div class="md:px-grid-margin py-xxl bg-background">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-xxl items-start">
       <div class="relative group">
         <div class="absolute -inset-2 border-2 border-accent-neon opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -17,7 +17,7 @@ import { LINKS } from '../constants/links';
         <div class="absolute inset-0 pointer-events-none" style="opacity: 0.05; background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E&quot;);"></div>
         <div class="absolute bottom-0 left-0 bg-accent-neon px-md py-xs text-black font-label uppercase text-sm font-bold">rie</div>
       </div>
-      <div class="flex flex-col gap-xl">
+      <div class="flex flex-col gap-xl px-4 md:px-0">
         <div class="flex flex-col gap-md">
           <h2 class="font-headline text-2xl font-bold uppercase text-on-surface">rie</h2>
           <div class="w-full h-px bg-surface-variant"></div>
@@ -27,7 +27,7 @@ import { LINKS } from '../constants/links';
           <p class="font-body text-md text-on-surface-variant leading-relaxed border-l-4 border-accent-neon pl-lg py-sm">Ubrzo nakon toga počinje da neguje DIY pristip muzici i kreće da objavljuje kako alt zvuk u okviru albuma Frekvencije i EP-ja Moskovski, tako i brojne hitične singlove poput Natalie, Noći u Dubaiju, Margina, BMW Mečka Audi, 10/10 i druge.</p>
           <p class="font-body text-md text-on-surface-variant">Važi za jednog od onih izvođača koji zavređuje poštovanje kolega kada su u pitanju i alt i komerc, što se ogledalo u saradnjama sa žanrovski različitim muzičarima.</p>
         </div>
-        <div class="flex flex-row gap-4 mt-xl">
+        <div class="flex flex-col md:flex-row gap-4 mt-xl">
           <a href={LINKS.spotify} target="_blank" rel="noopener noreferrer"
              class="w-[200px] flex items-center justify-center gap-3 px-8 py-3 border border-[#1DB954] text-[#1DB954] hover:bg-[#1DB954] hover:text-white transition-all duration-300 font-label font-bold tracking-wider uppercase text-sm group">
             <Icon name="spotify" class="w-6 h-6" />
